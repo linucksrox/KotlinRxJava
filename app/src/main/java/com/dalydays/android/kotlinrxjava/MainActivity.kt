@@ -3,6 +3,8 @@ package com.dalydays.android.kotlinrxjava
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
 
@@ -10,14 +12,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createObservable()
+        getNews().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+
+        TODO("Unsubscribe in onDestroy()")
     }
 
-    fun createObservable() {
-        var observableString: Observable<String> = Observable.just("this is my string")
-
-        TODO("Subscribe to the observable")
-        TODO("Run the observable code on a separate thread")
-        TODO("Unsubscribe in onDestroy()")
+    fun getNews(): Observable<String> {
+        return Observable.create { subscriber ->
+            val news = "news string"
+            subscriber.onNext(news)
+            subscriber.onComplete()
+        }
     }
 }
